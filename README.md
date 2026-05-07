@@ -16,9 +16,9 @@ UIなしで日本株をスクリーニングするCLIツールです。
 ## セットアップ
 
 ```powershell
-python -m venv .venv
+py -m venv .venv
 .\.venv\Scripts\Activate.ps1
-pip install -e .
+py -m pip install -e .
 Copy-Item .env.example .env
 ```
 
@@ -26,6 +26,7 @@ Copy-Item .env.example .env
 
 ```text
 EDINETDB_API_KEY=your_api_key_here
+EDINETDB_BASE_URL=https://edinetdb.jp/v1
 ```
 
 ## 実行
@@ -36,11 +37,35 @@ stock-screen growth --top 30
 stock-screen all --top 30
 ```
 
-開発中にパッケージインストール前の状態で動かす場合:
+高配当モードは、初期スクリーニング後に上位候補だけを追加レビューします。
 
 ```powershell
-python -m stock_screener.cli dividend --top 30
+stock-screen dividend --top 30 --review-top 50
 ```
+
+レビューではStooqの日足データから最新株価、100株金額、直近約1年の高値安値レンジも取得します。価格取得を止めたい場合:
+
+```powershell
+stock-screen dividend --top 30 --review-top 30 --no-price
+```
+
+無料API枠を節約したい場合は、レビューをスキップできます。
+
+```powershell
+stock-screen dividend --top 30 --no-review
+```
+
+## 高配当スコアの考え方
+
+高利回りだけを高評価にはしません。10年以上の長期保有を想定し、以下を重視します。
+
+- 配当継続性
+- 減配の少なさ
+- 配当額のブレの小ささ
+- 株価レンジの小ささ
+- 100株購入額が50万円以内か
+- 配当性向の無理のなさ
+- 自己資本比率、ROE、キャッシュフロー
 
 ## 出力
 
@@ -50,14 +75,6 @@ outputs/
   growth_YYYY-MM-DD.csv
   report_YYYY-MM-DD.md
 ```
-
-## 現在の制約
-
-EDINET DBはMCPとREST APIの両方がありますが、このCLIでは定期実行・バッチ処理に向いたREST API利用を想定しています。
-
-ただし、EDINET DBのREST APIレスポンス形状は運用中に調整される可能性があるため、まずは `src/stock_screener/data/edinetdb_client.py` の正規化処理を差し替えやすくしています。
-
-10年以上保有向けの判断を目指しますが、EDINET DBの記事情報ではカバレッジ期間はFY2020-FY2025です。最初は6年程度の財務安定性を評価し、将来的に長期株価・配当履歴データを追加して補完します。
 
 ## 投資判断について
 

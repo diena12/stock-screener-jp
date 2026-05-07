@@ -18,6 +18,8 @@ class FinancialSnapshot(BaseModel):
     payout_ratio: float | None = None
     per: float | None = None
     pbr: float | None = None
+    highest_share_price: float | None = None
+    lowest_share_price: float | None = None
 
 
 class FinancialSeries(BaseModel):

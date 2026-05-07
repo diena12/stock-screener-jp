@@ -5,15 +5,20 @@ filters:
   require_positive_operating_cf: true
 
 weights:
-  dividend_yield: 25
-  payout_safety: 20
-  financial_health: 20
-  cashflow_quality: 15
+  dividend_yield: 15
+  payout_safety: 18
+  financial_health: 15
+  cashflow_quality: 12
   profit_stability: 10
-  valuation_margin: 10
+  dividend_continuity: 18
+  dividend_stability: 7
+  price_stability: 5
+  valuation_margin: 0
 
 thresholds:
   ideal_payout_ratio: 0.6
   risky_payout_ratio: 0.8
   ideal_equity_ratio: 0.45
   ideal_roe: 0.08
+  ideal_price_range_ratio: 0.25
+  risky_price_range_ratio: 0.7
