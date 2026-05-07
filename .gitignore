@@ -3,5 +3,6 @@ __pycache__/
 *.py[cod]
 .env
 .cache/
+*.egg-info/
 outputs/*.csv
 outputs/*.md

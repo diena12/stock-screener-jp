@@ -16,15 +16,15 @@ class EdinetDbClient:
     def __init__(self) -> None:
         load_environment()
         self.api_key = os.getenv("EDINETDB_API_KEY")
-        self.base_url = os.getenv("EDINETDB_BASE_URL", "https://edinetdb.jp/api/v1").rstrip("/")
+        self.base_url = os.getenv("EDINETDB_BASE_URL", "https://edinetdb.jp/v1").rstrip("/")
         self.cache = JsonCache(get_cache_dir())
 
     def load_universe(self, use_sample: bool = False) -> list[tuple[Company, FinancialSeries]]:
         if use_sample or not self.api_key:
             return load_sample_universe()
 
-        rankings = self._get("/ranking", params={"type": "market_cap", "limit": 4000})
-        return self._normalize_universe(rankings)
+        companies = self._get("/companies", params={"per_page": 5000, "include_nulls": "true"})
+        return self._normalize_universe(companies)
 
     def _get(self, path: str, params: dict[str, Any] | None = None) -> Any:
         cache_key = f"{path}:{params or {}}"
@@ -32,7 +32,7 @@ class EdinetDbClient:
         if cached is not None:
             return cached
 
-        headers = {"Authorization": f"Bearer {self.api_key}"}
+        headers = {"X-API-Key": self.api_key}
         with httpx.Client(timeout=30) as client:
             response = client.get(f"{self.base_url}{path}", params=params, headers=headers)
             response.raise_for_status()
