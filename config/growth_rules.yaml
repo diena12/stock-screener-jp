@@ -1,0 +1,18 @@
+filters:
+  max_lot_price: 500000
+  min_revenue_cagr: 0.03
+  min_roe: 0.08
+
+weights:
+  revenue_growth: 25
+  profit_growth: 25
+  capital_efficiency: 20
+  margin_trend: 10
+  cashflow_quality: 10
+  valuation_discipline: 10
+
+thresholds:
+  ideal_revenue_cagr: 0.12
+  ideal_profit_cagr: 0.15
+  ideal_roe: 0.15
+  expensive_per: 45

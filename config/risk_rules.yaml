@@ -1,0 +1,10 @@
+risk_penalties:
+  negative_net_income: 25
+  negative_operating_cf: 20
+  high_payout_ratio: 15
+  low_equity_ratio: 15
+  missing_key_data: 10
+
+thresholds:
+  high_payout_ratio: 0.9
+  low_equity_ratio: 0.25

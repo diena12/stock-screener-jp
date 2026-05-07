@@ -1,0 +1,19 @@
+filters:
+  max_lot_price: 500000
+  min_dividend_yield: 0.03
+  min_equity_ratio: 0.25
+  require_positive_operating_cf: true
+
+weights:
+  dividend_yield: 25
+  payout_safety: 20
+  financial_health: 20
+  cashflow_quality: 15
+  profit_stability: 10
+  valuation_margin: 10
+
+thresholds:
+  ideal_payout_ratio: 0.6
+  risky_payout_ratio: 0.8
+  ideal_equity_ratio: 0.45
+  ideal_roe: 0.08
