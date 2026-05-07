@@ -67,8 +67,8 @@ class EdinetDbClient:
 
         for item in items:
             company = Company(
-                code=str(_first(item, "sec_code", "security_code", "code", "ticker", "securities_code") or ""),
-                name=str(_first(item, "filer_name", "name", "company_name", "companyName") or ""),
+                code=str(_first(item, "sec_code", "secCode", "security_code", "code", "ticker", "securities_code") or ""),
+                name=str(_first(item, "filer_name", "filerName", "name", "company_name", "companyName", "name_en") or ""),
                 market=item.get("market"),
                 sector=item.get("sector") or item.get("industry"),
                 edinet_code=_first(item, "edinet_code", "edinetCode"),
@@ -86,6 +86,10 @@ def _extract_items(payload: Any) -> Any:
         value = payload.get(key)
         if isinstance(value, list):
             return value
+        if isinstance(value, dict):
+            nested = _extract_items(value)
+            if isinstance(nested, list):
+                return nested
     return payload
 
 
@@ -105,12 +109,12 @@ def _extract_snapshots(item: dict[str, Any]) -> list[FinancialSnapshot]:
                 net_income=_to_float(_first(entry, "net_income", "netIncome", "profit")),
                 eps=_to_float(_first(entry, "eps", "adjusted_eps", "adjustedEps")),
                 roe=_to_ratio(_first(entry, "roe", "roe_official", "roeOfficial")),
-                equity_ratio=_to_ratio(_first(entry, "equity_ratio", "equity_ratio_official", "equityRatio")),
+                equity_ratio=_to_ratio(_first(entry, "equity_ratio", "equity-ratio", "equity_ratio_official", "equityRatio")),
                 operating_cf=_to_float(_first(entry, "operating_cf", "operating_cash_flow", "cf_operating", "cfOperating")),
                 free_cf=_to_float(_first(entry, "free_cf", "free_cash_flow", "fcf")),
                 dividend_per_share=_to_float(_first(entry, "dividend_per_share", "adjusted_dividend_per_share", "dps")),
-                dividend_yield=_to_ratio(_first(entry, "dividend_yield", "dividendYield")),
-                payout_ratio=_to_ratio(_first(entry, "payout_ratio", "payoutRatio")),
+                dividend_yield=_to_ratio(_first(entry, "dividend_yield", "dividend-yield", "dividendYield")),
+                payout_ratio=_to_ratio(_first(entry, "payout_ratio", "payout-ratio", "payoutRatio")),
                 per=_to_float(_first(entry, "per")),
                 pbr=_to_float(_first(entry, "pbr")),
             )
