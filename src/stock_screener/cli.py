@@ -27,7 +27,6 @@ def main() -> None:
     args = parser.parse_args()
 
     data_agent = DataAgent()
-    universe = data_agent.load_universe(use_sample=args.sample)
 
     risk_agent = RiskAgent(load_rules("risk_rules"))
     dividend_agent = DividendAgent(load_rules("dividend_rules"), risk_agent)
@@ -38,15 +37,17 @@ def main() -> None:
     growth_results: list[ScreeningResult] = []
 
     if args.mode in ("dividend", "all"):
-        dividend_results = dividend_agent.screen(universe, args.top)
+        dividend_universe = data_agent.load_dividend_universe(limit=max(args.top * 10, 100), use_sample=args.sample)
+        dividend_results = dividend_agent.screen(dividend_universe, args.top)
         path = report_agent.write_dividend(dividend_results)
-        _print_results("高配当・安定株候補", dividend_results)
+        _print_results("Dividend candidates", dividend_results)
         console.print(f"[green]CSV written:[/green] {path}")
 
     if args.mode in ("growth", "all"):
+        universe = data_agent.load_universe(use_sample=args.sample)
         growth_results = growth_agent.screen(universe, args.top)
         path = report_agent.write_growth(growth_results)
-        _print_results("値上がり期待株候補", growth_results)
+        _print_results("Growth candidates", growth_results)
         console.print(f"[green]CSV written:[/green] {path}")
 
     if args.mode == "all":

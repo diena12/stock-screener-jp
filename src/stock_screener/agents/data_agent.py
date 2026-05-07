@@ -11,3 +11,10 @@ class DataAgent:
 
     def load_universe(self, use_sample: bool = False) -> list[tuple[Company, FinancialSeries]]:
         return self.client.load_universe(use_sample=use_sample)
+
+    def load_dividend_universe(
+        self,
+        limit: int = 500,
+        use_sample: bool = False,
+    ) -> list[tuple[Company, FinancialSeries]]:
+        return self.client.load_dividend_universe(limit=limit, use_sample=use_sample)
